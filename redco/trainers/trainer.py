@@ -15,6 +15,7 @@
 import os
 from functools import partial
 import json
+from tqdm import tqdm
 import numpy as np
 import jax
 from jax.experimental.pjit import pjit
@@ -165,7 +166,7 @@ class Trainer:
             is_train=True,
             accumulate_grad_batches=self._accumulate_grad_batches)
 
-        for batch in data_batches:
+        for batch in tqdm(data_batches, desc="Training..."):
             if self._p_train_step is None:
                 self.setup_running_step(dummy_batch=batch)
 
@@ -193,7 +194,7 @@ class Trainer:
             desc=f'Evaluating ({desc})' if desc is not None else 'Evaluating')
 
         losses = []
-        for batch in data_batches:
+        for batch in tqdm(data_batches,desc="Evaluating ...",):
             if self._p_eval_step is None:
                 self.setup_running_step(dummy_batch=batch)
 
